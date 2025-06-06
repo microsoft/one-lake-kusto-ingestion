@@ -67,7 +67,9 @@ namespace OneLakeKustoIngestionConsole
                 await _discoveryProcess.RunAsync(_rowStorage, ct);
             }
 
+            Console.WriteLine("Start ingestion...");
             await _importerProcess.RunAsync(ct);
+            Console.WriteLine("Completed ingestion...");
         }
     }
 }

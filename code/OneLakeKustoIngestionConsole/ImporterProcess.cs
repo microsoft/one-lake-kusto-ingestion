@@ -39,43 +39,45 @@ namespace OneLakeKustoIngestionConsole
             var ingestionCapacity = (long)0;
             var reportExpiry = ingestionCapacityExpiry;
 
-            while (discoveredBatches.Any())
+            while (discoveredBatches.Any() || ingestingBatches.Any())
             {
                 if (ingestionCapacityExpiry < DateTime.Now)
                 {   //  Refresh total capacity
                     ingestionCapacity = await _kustoGateway.FetchIngestionCapacityAsync(ct);
                     ingestionCapacityExpiry = DateTime.Now.Add(CAPACITY_CACHE_DURATION);
                 }
-                if (reportExpiry < DateTime.Now)
-                {
-                    var countByState = _rowStorage.Cache.GetAllItems()
-                        .GroupBy(r => r.State)
-                        .ToImmutableDictionary(g => g.Key, g => g.Count());
-                    var discoveredCount = countByState.ContainsKey(BlobState.Discovered)
-                        ? countByState[BlobState.Discovered]
-                        : 0;
-                    var ingestingCount = countByState.ContainsKey(BlobState.Ingesting)
-                        ? countByState[BlobState.Ingesting]
-                        : 0;
-                    var ingestedCount = countByState.ContainsKey(BlobState.Ingested)
-                        ? countByState[BlobState.Ingested]
-                        : 0;
-
-                    Console.WriteLine($"Discovered ({discoveredCount}), " +
-                        $"Ingesting ({ingestingCount}), Ingested ({ingestedCount})");
-                    reportExpiry = DateTime.Now.Add(WAIT_BETWEEN_REPORT);
-                }
                 await StartIngestDataAsync(
                     ingestionCapacity,
                     discoveredBatches,
                     ingestingBatches,
                     ct);
+                if (reportExpiry < DateTime.Now)
+                {
+                    ReportProgress();
+                    reportExpiry = DateTime.Now.Add(WAIT_BETWEEN_REPORT);
+                }
                 await Task.Delay(WAIT_BETWEEN_CHECK, ct);
                 await EndIngestDataAsync(
                     ingestingBatches,
                     discoveredBatches,
                     ct);
             }
+        }
+
+        private void ReportProgress()
+        {
+            var discoveredCount = _rowStorage.Cache.GetAllItems()
+                                    .Where(r => r.State == BlobState.Discovered)
+                                    .Count();
+            var ingestingCount = _rowStorage.Cache.GetAllItems()
+                .Where(r => r.State == BlobState.Ingesting)
+                .Count();
+            var ingestedCount = _rowStorage.Cache.GetAllItems()
+                .Where(r => r.State == BlobState.Ingested)
+                .Count();
+
+            Console.WriteLine($"  Discovered ({discoveredCount}), " +
+                $"Ingesting ({ingestingCount}), Ingested ({ingestedCount})");
         }
 
         private async Task EndIngestDataAsync(
