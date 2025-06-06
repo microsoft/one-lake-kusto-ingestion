@@ -12,7 +12,8 @@ namespace OneLakeKustoIngestionConsole
 {
     internal class OrchestrationProcess
     {
-        private readonly TokenCredential _credential = new DefaultAzureCredential();
+        private readonly TokenCredential _credential = new AzureCliCredential();
+            //new DefaultAzureCredential();
         private readonly RowStorage _rowStorage;
         private readonly DiscoveryProcess _discoveryProcess;
         private readonly ImporterProcess _importerProcess;
