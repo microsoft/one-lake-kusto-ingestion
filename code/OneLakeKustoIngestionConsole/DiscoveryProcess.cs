@@ -61,7 +61,7 @@ namespace OneLakeKustoIngestionConsole
             var fileSystemClient = serviceClient.GetFileSystemClient(_fileSystemName);
             //  Get directory client and list blobs
             var directoryClient = fileSystemClient.GetDirectoryClient(_directoryPath);
-            var blobs = directoryClient.GetPathsAsync(recursive: false);
+            var blobs = directoryClient.GetPathsAsync(recursive: true);
 
             //  Display each blob
             await foreach (var blob in blobs)
