@@ -23,6 +23,20 @@ namespace OneLakeKustoIngestionConsole
             "table-uri",
             Required = true,
             HelpText = "Kusto table URI, e.g. https://mycluster.z4.kusto.fabric.microsoft.com/mydb/mytable")]
-        public string DatabaseUrl { get; set; } = string.Empty;
+        public string TableUrl { get; set; } = string.Empty;
+
+        [Option(
+            'm',
+            "mapping",
+            Required = true,
+            HelpText = "Data Mapping reference")]
+        public string Mapping { get; set; } = string.Empty;
+
+        [Option(
+            'f',
+            "format",
+            Required = true,
+            HelpText = "Data format of the blobs")]
+        public string Format { get; set; } = string.Empty;
     }
 }

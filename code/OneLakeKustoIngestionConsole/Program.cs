@@ -13,7 +13,7 @@ namespace OneLakeKustoIngestionConsole
                     var process = await OrchestrationProcess.CreateAsync(
                         options.DirectoryPath,
                         options.Suffix,
-                        options.DatabaseUrl,
+                        options.TableUrl,
                         ct);
 
                     await process.RunAsync(ct);
