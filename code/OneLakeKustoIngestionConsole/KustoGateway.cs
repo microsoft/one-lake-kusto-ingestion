@@ -57,13 +57,15 @@ namespace OneLakeKustoIngestionConsole
 
         public async Task<string> IngestBlobsAsync(
             IEnumerable<string> urls,
+            string format,
+            string mapping,
             CancellationToken ct)
         {
             var commandText = $@"
 .ingest async into table {_tableName}(
   {string.Join(", ", urls.Select(u => $"'{u};impersonate'"))}
 )
-with (format='parquet')
+with (format='{format}', ingestionMappingReference='{mapping}')
 ";
             var reader = await _commandProvider.ExecuteControlCommandAsync(
                 _databaseName,

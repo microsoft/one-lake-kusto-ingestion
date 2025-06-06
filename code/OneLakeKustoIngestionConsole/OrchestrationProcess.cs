@@ -13,16 +13,17 @@ namespace OneLakeKustoIngestionConsole
     internal class OrchestrationProcess
     {
         private readonly TokenCredential _credential = new DefaultAzureCredential();
-        private readonly string _fullDirectoryPath;
-        private readonly string? _suffix;
-        private readonly string _databaseUrl;
         private readonly RowStorage _rowStorage;
+        private readonly DiscoveryProcess _discoveryProcess;
+        private readonly ImporterProcess _importerProcess;
 
         #region Constructor
         public static async Task<OrchestrationProcess> CreateAsync(
             string fullDirectoryPath,
             string? suffix,
             string databaseUrl,
+            string mapping,
+            string format,
             CancellationToken ct)
         {
             var rowStorage = await RowStorage.LoadAsync(ct);
@@ -31,6 +32,8 @@ namespace OneLakeKustoIngestionConsole
                 fullDirectoryPath,
                 suffix,
                 databaseUrl,
+                mapping,
+                format,
                 rowStorage);
         }
 
@@ -38,12 +41,21 @@ namespace OneLakeKustoIngestionConsole
             string fullDirectoryPath,
             string? suffix,
             string databaseUrl,
+            string mapping,
+            string format,
             RowStorage rowStorage)
         {
-            _fullDirectoryPath = fullDirectoryPath;
-            _suffix = suffix;
-            _databaseUrl = databaseUrl;
             _rowStorage = rowStorage;
+            _discoveryProcess = new DiscoveryProcess(
+                _credential,
+                fullDirectoryPath,
+                suffix);
+            _importerProcess = new ImporterProcess(
+                _credential,
+                databaseUrl,
+                rowStorage,
+                mapping,
+                format);
         }
         #endregion
 
@@ -51,18 +63,11 @@ namespace OneLakeKustoIngestionConsole
         {
             if (_rowStorage.Cache.Count == 0)
             {
-                var discoveryProcess = new DiscoveryProcess(
-                    _credential,
-                    _fullDirectoryPath,
-                    _suffix);
-
                 Console.WriteLine("No blobs detected in checkpoint");
-                await discoveryProcess.RunAsync(_rowStorage, ct);
+                await _discoveryProcess.RunAsync(_rowStorage, ct);
             }
 
-            var importerProcess = new ImporterProcess(_credential, _databaseUrl, _rowStorage);
-
-            await importerProcess.RunAsync(ct);
+            await _importerProcess.RunAsync(ct);
         }
     }
 }

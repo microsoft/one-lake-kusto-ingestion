@@ -15,14 +15,20 @@ namespace OneLakeKustoIngestionConsole
 
         private readonly RowStorage _rowStorage;
         private readonly KustoGateway _kustoGateway;
+        private readonly string _mapping;
+        private readonly string _format;
 
         public ImporterProcess(
             TokenCredential credential,
             string tableUrl,
-            RowStorage rowStorage)
+            RowStorage rowStorage,
+            string mapping,
+            string format)
         {
             _kustoGateway = new KustoGateway(credential, tableUrl);
             _rowStorage = rowStorage;
+            _mapping = mapping;
+            _format = format;
         }
 
         public async Task RunAsync(CancellationToken ct)
@@ -149,6 +155,8 @@ namespace OneLakeKustoIngestionConsole
                 var batch = discoveredBatches.Pop();
                 var operationId = await _kustoGateway.IngestBlobsAsync(
                     batch.Select(r => r.BlobUrl),
+                    _format,
+                    _mapping,
                     ct);
                 var ingestingBatch = batch
                     .Select(r => r with

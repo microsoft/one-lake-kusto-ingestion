@@ -14,6 +14,8 @@ namespace OneLakeKustoIngestionConsole
                         options.DirectoryPath,
                         options.Suffix,
                         options.TableUrl,
+                        options.Mapping,
+                        options.Format,
                         ct);
 
                     await process.RunAsync(ct);
