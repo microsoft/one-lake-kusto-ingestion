@@ -23,7 +23,7 @@ namespace OneLakeKustoIngestionConsole
             string? suffix,
             string databaseUrl,
             string? mapping,
-            string? format,
+            string format,
             CancellationToken ct)
         {
             var rowStorage = await RowStorage.LoadAsync(ct);
@@ -42,7 +42,7 @@ namespace OneLakeKustoIngestionConsole
             string? suffix,
             string databaseUrl,
             string? mapping,
-            string? format,
+            string format,
             RowStorage rowStorage)
         {
             _rowStorage = rowStorage;

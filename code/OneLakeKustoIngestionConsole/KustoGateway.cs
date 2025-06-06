@@ -57,20 +57,19 @@ namespace OneLakeKustoIngestionConsole
 
         public async Task<string> IngestBlobsAsync(
             IEnumerable<string> urls,
-            string? format,
+            string format,
             string? mapping,
             CancellationToken ct)
         {
-            var formatText = format != null ? $"format='{format}'" : null;
-            var mappingText = mapping != null ? $"ingestionMappingReference='{mapping}'" : null;
-            var propertyListText = string.Join(", ", new[] { formatText, mapping }.Where(t => t != null));
-            var withClause = formatText == null && mappingText == null
-                ? string.Empty
-                : $"with ({propertyListText})";
+            var mappingPart = !string.IsNullOrWhiteSpace(mapping) 
+                ? $", ingestionMappingReference='{mapping}'" 
+                : string.Empty;
+            var withClause = $"with (format='{format}'{mappingPart})";
 
+            var urlList = string.Join(",\n  ", urls.Select(u => $"'{u};impersonate'"));
             var commandText = $@"
 .ingest async into table {_tableName}(
-  {string.Join(", ", urls.Select(u => $"'{u};impersonate'"))}
+  {urlList}
 )
 {withClause}
 ";

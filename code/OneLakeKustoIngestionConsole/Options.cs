@@ -28,7 +28,7 @@ namespace OneLakeKustoIngestionConsole
         [Option(
             'm',
             "mapping",
-            Required = true,
+            Required = false,
             HelpText = "Data Mapping reference")]
         public string Mapping { get; set; } = string.Empty;
 

@@ -10,12 +10,17 @@ namespace OneLakeKustoIngestionConsole
                 .WithParsedAsync(async options =>
                 {
                     var ct = CancellationToken.None;
+                    if (string.IsNullOrWhiteSpace(options.Format))
+                    {
+                        throw new ArgumentException("Format parameter is required and cannot be empty");
+                    }
+
                     var process = await OrchestrationProcess.CreateAsync(
                         options.DirectoryPath,
                         options.Suffix,
                         options.TableUrl,
                         string.IsNullOrWhiteSpace(options.Mapping) ? null : options.Mapping,
-                        string.IsNullOrWhiteSpace(options.Format) ? null : options.Format,
+                        options.Format,
                         ct);
 
                     await process.RunAsync(ct);
