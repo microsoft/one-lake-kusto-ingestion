@@ -42,7 +42,6 @@ jobs:
       ASSETS_NAME: ${{ matrix.ASSETS_NAME }}
       ASSET_SUFFIX: ${{ matrix.assetSuffix }}
       EXEC_NAME:  olki
-      PACKAGE_NAME:  one-lake-kusto-ingestion
     
     steps:
     - uses: actions/checkout@v2
@@ -101,6 +100,9 @@ jobs:
   # This is the release job, integrating work from windows + linux + mac job
   # see https://stackoverflow.com/questions/57498605/github-actions-share-workspace-artifacts-between-jobs
   release:
+    env:
+      PACKAGE_NAME:  one-lake-kusto-ingestion
+
     # This integrates the artefacts from the other jobs
     needs:
     - build
@@ -139,15 +141,15 @@ jobs:
     - name: Zip Linux executable
       run:  |
         cd linux-assets/bin
-        tar -czvf ../../final-assets/${{ env.ASSETS_NAME }}-linux.tar.gz *
+        tar -czvf ../../final-assets/$PACKAGE_NAME-linux.tar.gz *
     - name: Zip Mac executable
       run:  |
         cd mac-assets/bin
-        tar -czvf ../../final-assets/${{ env.ASSETS_NAME }}-mac.tar.gz *
+        tar -czvf ../../final-assets/$PACKAGE_NAME-mac.tar.gz *
     - name: Zip Windows executable
       run:  |
         cd windows-assets/bin
-        tar -czvf ../../final-assets/${{ env.ASSETS_NAME }}-windows.tar.gz *
+        tar -czvf ../../final-assets/$PACKAGE_NAME-windows.tar.gz *
     # Validate final assets
     - name: Final assets content
       run:  ls -l final-assets
