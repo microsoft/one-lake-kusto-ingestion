@@ -7,8 +7,8 @@ namespace OneLakeKustoIngestionConsole
 {
     internal class ImporterProcess
     {
-        private const long BATCH_SIZE = 1000000;
-        //private const long BATCH_SIZE = 200000000;
+        //private const long BATCH_SIZE = 1000000;
+        private const long BATCH_SIZE = 200000000;
         private static readonly TimeSpan CAPACITY_CACHE_DURATION = TimeSpan.FromMinutes(1);
         private static readonly TimeSpan WAIT_BETWEEN_CHECK = TimeSpan.FromSeconds(5);
         private static readonly TimeSpan WAIT_BETWEEN_REPORT = TimeSpan.FromSeconds(20);
