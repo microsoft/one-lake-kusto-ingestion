@@ -28,14 +28,14 @@ namespace OneLakeKustoIngestionConsole
 
             //  Remove path to keep only cluster URI
             uriBuilder.Path = string.Empty;
-            if (pathParts.Length!=2)
+            if (pathParts.Length != 2)
             {
                 throw new InvalidDataException($"Invalid table uri:  {tableUri}");
             }
 
             var builder = new KustoConnectionStringBuilder(uriBuilder.Uri.ToString())
                 .WithAadAzureTokenCredentialsAuthentication(credential);
-            
+
             _commandProvider = KustoClientFactory.CreateCslAdminProvider(builder);
             _databaseName = pathParts[0];
             _tableName = pathParts[1];
@@ -57,15 +57,22 @@ namespace OneLakeKustoIngestionConsole
 
         public async Task<string> IngestBlobsAsync(
             IEnumerable<string> urls,
-            string format,
-            string mapping,
+            string? format,
+            string? mapping,
             CancellationToken ct)
         {
+            var formatText = format != null ? $"format='{format}'" : null;
+            var mappingText = mapping != null ? $"ingestionMappingReference='{mapping}'" : null;
+            var propertyListText = string.Join(", ", new[] { formatText, mapping }.Where(t => t != null));
+            var withClause = formatText == null && mappingText == null
+                ? string.Empty
+                : $"with ({propertyListText})";
+
             var commandText = $@"
 .ingest async into table {_tableName}(
   {string.Join(", ", urls.Select(u => $"'{u};impersonate'"))}
 )
-with (format='{format}', ingestionMappingReference='{mapping}')
+{withClause}
 ";
             var reader = await _commandProvider.ExecuteControlCommandAsync(
                 _databaseName,

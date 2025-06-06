@@ -22,8 +22,8 @@ namespace OneLakeKustoIngestionConsole
             string fullDirectoryPath,
             string? suffix,
             string databaseUrl,
-            string mapping,
-            string format,
+            string? mapping,
+            string? format,
             CancellationToken ct)
         {
             var rowStorage = await RowStorage.LoadAsync(ct);
@@ -41,8 +41,8 @@ namespace OneLakeKustoIngestionConsole
             string fullDirectoryPath,
             string? suffix,
             string databaseUrl,
-            string mapping,
-            string format,
+            string? mapping,
+            string? format,
             RowStorage rowStorage)
         {
             _rowStorage = rowStorage;

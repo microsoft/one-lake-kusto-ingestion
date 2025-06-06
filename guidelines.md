@@ -6,6 +6,8 @@ Each class should have its own file unless it's a private class within another c
 
 ## Syntax preferences
 
+### 100 characters
+
 We want code lines to be shorter than 100 characters.
 
 When a line is longer than 100 characters, we move method parameters to its own line, e.g.:
@@ -23,3 +25,7 @@ becomes
         65200,
         "My third parameter");
 ```
+
+### if statements
+
+If statements should always have curly braces, even when only one line per clause.

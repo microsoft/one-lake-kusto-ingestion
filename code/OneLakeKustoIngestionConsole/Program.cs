@@ -14,8 +14,8 @@ namespace OneLakeKustoIngestionConsole
                         options.DirectoryPath,
                         options.Suffix,
                         options.TableUrl,
-                        options.Mapping,
-                        options.Format,
+                        string.IsNullOrWhiteSpace(options.Mapping) ? null : options.Mapping,
+                        string.IsNullOrWhiteSpace(options.Format) ? null : options.Format,
                         ct);
 
                     await process.RunAsync(ct);
