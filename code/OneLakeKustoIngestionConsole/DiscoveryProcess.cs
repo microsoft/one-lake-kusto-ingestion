@@ -60,7 +60,7 @@ namespace OneLakeKustoIngestionConsole
             var directoryClient = fileSystemClient.GetDirectoryClient(_directoryPath);
             var blobs = directoryClient.GetPathsAsync(recursive: true);
 
-            //  Display each blob
+            //  "Register" each blob
             await foreach (var blob in blobs)
             {
                 if (_suffix == null
