@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,6 +15,12 @@
     <PackageReference Include="Azure.Identity" Version="1.14.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.Azure.Kusto.Data" Version="13.0.0" />
+  </ItemGroup>
+  <!--  Disable trimming on Kusto library  -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization" Value="true" />
+    <TrimmerRootAssembly Include="Kusto.Data" />
+    <TrimmerRootAssembly Include="Kusto.Ingest" />
   </ItemGroup>
 
 </Project>

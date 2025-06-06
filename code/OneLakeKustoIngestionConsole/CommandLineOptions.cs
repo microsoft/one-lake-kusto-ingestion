@@ -2,7 +2,7 @@ using CommandLine;
 
 namespace OneLakeKustoIngestionConsole
 {
-    public class Options
+    public class CommandLineOptions
     {
         [Option(
             'd',
