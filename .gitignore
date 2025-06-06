@@ -404,3 +404,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#       Customization
+**/Properties/*.json
+*.local.json
