@@ -55,11 +55,8 @@ namespace OneLakeKustoIngestionConsole
             Console.WriteLine($"  File System: {_fileSystemName}");
             Console.WriteLine($"  Directory Path: {_directoryPath}");
 
-            //  Create DataLakeServiceClient with DefaultAzureCredential
             var serviceClient = new DataLakeServiceClient(_lakeEndpoint, _credential);
-            //  Get file system client
             var fileSystemClient = serviceClient.GetFileSystemClient(_fileSystemName);
-            //  Get directory client and list blobs
             var directoryClient = fileSystemClient.GetDirectoryClient(_directoryPath);
             var blobs = directoryClient.GetPathsAsync(recursive: true);
 
