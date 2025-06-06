@@ -26,6 +26,7 @@ namespace OneLakeKustoIngestionConsole
                         options.TableUrl,
                         string.IsNullOrWhiteSpace(options.Mapping) ? null : options.Mapping,
                         options.Format,
+                        Constants.APP_NAME_FOR_TRACING,
                         ct);
 
                     await process.RunAsync(ct);

@@ -15,7 +15,7 @@ namespace OneLakeKustoIngestionConsole
         private readonly string _tableName;
 
         #region Constructor
-        public KustoGateway(TokenCredential credential, string tableUrl)
+        public KustoGateway(TokenCredential credential, string tableUrl, string appNameForTracing)
         {
             if (!Uri.TryCreate(tableUrl, UriKind.Absolute, out var tableUri))
             {
@@ -36,6 +36,7 @@ namespace OneLakeKustoIngestionConsole
             var builder = new KustoConnectionStringBuilder(uriBuilder.Uri.ToString())
                 .WithAadAzureTokenCredentialsAuthentication(credential);
 
+            builder.ApplicationNameForTracing = appNameForTracing;
             _commandProvider = KustoClientFactory.CreateCslAdminProvider(builder);
             _databaseName = pathParts[0];
             _tableName = pathParts[1];

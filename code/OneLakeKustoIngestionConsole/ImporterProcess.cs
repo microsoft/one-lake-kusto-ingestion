@@ -23,9 +23,10 @@ namespace OneLakeKustoIngestionConsole
             string tableUrl,
             RowStorage rowStorage,
             string? mapping,
-            string format)
+            string format,
+            string appNameForTracing)
         {
-            _kustoGateway = new KustoGateway(credential, tableUrl);
+            _kustoGateway = new KustoGateway(credential, tableUrl, appNameForTracing);
             _rowStorage = rowStorage;
             _mapping = mapping;
             _format = format;

@@ -25,6 +25,7 @@ namespace OneLakeKustoIngestionConsole
             string databaseUrl,
             string? mapping,
             string format,
+            string appNameForTracing,
             CancellationToken ct)
         {
             var rowStorage = await RowStorage.LoadAsync(ct);
@@ -35,7 +36,8 @@ namespace OneLakeKustoIngestionConsole
                 databaseUrl,
                 mapping,
                 format,
-                rowStorage);
+                rowStorage,
+                appNameForTracing);
         }
 
         private OrchestrationProcess(
@@ -44,7 +46,8 @@ namespace OneLakeKustoIngestionConsole
             string databaseUrl,
             string? mapping,
             string format,
-            RowStorage rowStorage)
+            RowStorage rowStorage,
+            string appNameForTracing)
         {
             _rowStorage = rowStorage;
             _discoveryProcess = new DiscoveryProcess(
@@ -56,7 +59,8 @@ namespace OneLakeKustoIngestionConsole
                 databaseUrl,
                 rowStorage,
                 mapping,
-                format);
+                format,
+                appNameForTracing);
         }
         #endregion
 
